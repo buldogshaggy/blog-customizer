@@ -1,5 +1,5 @@
 import { createRoot } from 'react-dom/client';
-import { StrictMode, CSSProperties } from 'react';
+import { StrictMode, CSSProperties, useRef } from 'react';
 import clsx from 'clsx';
 
 import { Article } from './components/article/Article';
@@ -10,11 +10,23 @@ import './styles/index.scss';
 import styles from './styles/index.module.scss';
 
 const domNode = document.getElementById('root') as HTMLDivElement;
+if (!domNode) throw new Error('Root element not found');
 const root = createRoot(domNode);
 
 const App = () => {
+	const mainRef = useRef<HTMLElement>(null);
+
+	const updateMainStyles = (styles: Record<string, string>) => {
+		if (mainRef.current) {
+			Object.entries(styles).forEach(([key, value]) => {
+				mainRef.current!.style.setProperty(key, value);
+			});
+		}
+	};
+
 	return (
 		<main
+			ref={mainRef}
 			className={clsx(styles.main)}
 			style={
 				{
@@ -25,7 +37,7 @@ const App = () => {
 					'--bg-color': defaultArticleState.backgroundColor.value,
 				} as CSSProperties
 			}>
-			<ArticleParamsForm />
+			<ArticleParamsForm onUpdateStyles={updateMainStyles} />
 			<Article />
 		</main>
 	);
