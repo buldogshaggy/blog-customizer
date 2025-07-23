@@ -26,22 +26,22 @@ type ArticleParamsFormProps = {
 export const ArticleParamsForm = ({
 	onUpdateStyles,
 }: ArticleParamsFormProps) => {
-	const [isOpen, setIsOpen] = useState(false);
+	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const [formData, setFormData] =
 		useState<ArticleStateType>(defaultArticleState);
 
 	const formRef = useRef<HTMLFormElement>(null);
 
 	const toggleSidebar = () => {
-		setIsOpen((prev) => !prev);
+		setIsMenuOpen((prev) => !prev);
 	};
 
 	useEffect(() => {
-		if (!isOpen) return;
+		if (!isMenuOpen) return;
 
 		const handleClickOutside = (event: MouseEvent) => {
 			if (formRef.current && !formRef.current.contains(event.target as Node)) {
-				setIsOpen(false);
+				setIsMenuOpen(false);
 			}
 		};
 
@@ -50,7 +50,7 @@ export const ArticleParamsForm = ({
 		return () => {
 			document.removeEventListener('mousedown', handleClickOutside);
 		};
-	}, [isOpen]);
+	}, [isMenuOpen]);
 
 	const handleChange =
 		(key: keyof ArticleStateType) => (selected: OptionType) => {
@@ -70,7 +70,7 @@ export const ArticleParamsForm = ({
 
 		onUpdateStyles(styles);
 
-		setIsOpen(false);
+		setIsMenuOpen(false);
 	};
 
 	const handleReset = (e: React.FormEvent<HTMLFormElement>) => {
@@ -91,10 +91,10 @@ export const ArticleParamsForm = ({
 
 	return (
 		<>
-			<ArrowButton isOpen={isOpen} onClick={toggleSidebar} />
+			<ArrowButton isOpen={isMenuOpen} onClick={toggleSidebar} />
 			<aside
 				className={clsx(styles.container, {
-					[styles.container_open]: isOpen,
+					[styles.container_open]: isMenuOpen,
 				})}>
 				<form
 					ref={formRef}
